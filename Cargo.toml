@@ -2,6 +2,23 @@
 name = "compile-schema"
 version = "0.1.0"
 edition = "2024"
+description = "Compile a SQL schema from a set of migrations"
+repository = "https://github.com/wireapp/compile-schema"
+license = "GPL-3.0-only"
+publish = false
+
+[package.metadata.release]
+pre-release-hook = [
+    "git",
+    "cliff",
+    "-o",
+    "CHANGELOG.md",
+    "--tag",
+    "{{version}}",
+]
+
+[package.metadata.dist]
+dist = true
 
 [dependencies]
 anyhow = "1.0.102"
@@ -11,3 +28,8 @@ refinery = { version = "0.9.0", features = ["rusqlite"] }
 rusqlite = { version = "0.37.0", features = ["functions"] }
 sha2 = "0.10.9"
 sqlformat = "0.5.0"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
