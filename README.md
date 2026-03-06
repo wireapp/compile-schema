@@ -9,3 +9,17 @@ This project uses an in-memory SQLite database to evaluate the effects of a set 
 ## Migrations Format
 
 The path passed to this tool must be to a directory containing migrations. Migrations are SQL files named in the format `V{1}__{2}.sql`, where `{1}` is the migration version number and `{2}` is the migration name. Migrations are applied in ascending order of version number.
+
+## Installation
+
+### With Rust Toolchain / Local Build
+
+```sh
+cargo install --git https://github.com/wireapp/compile-schema
+```
+
+### Without Rust Toolchain / Download Prebuilt Artifact
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/wireapp/compile-schema/releases/latest/download/compile-schema-installer.sh | sh
+```
