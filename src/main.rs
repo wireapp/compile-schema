@@ -37,20 +37,26 @@ fn main() -> Result<()> {
             "SELECT sql FROM sqlite_schema WHERE sql IS NOT NULL AND name NOT LIKE 'refinery_%'",
         )
         .context("preparing schema query")?;
-    for row in stmt
+    let schema = stmt
         .query_map([], |row| row.get::<_, String>("sql"))
         .context("executing query")?
-    {
-        let sql = row.context("loading row from query results")?;
-        let formatted = sqlformat::format(
-            &sql,
-            &Default::default(),
-            &sqlformat::FormatOptions {
-                uppercase: Some(true),
-                ..Default::default()
-            },
-        );
-        println!("{formatted};\n");
-    }
+        .map(|row| {
+            let sql = row.context("loading row from query results")?;
+            Ok(format!(
+                "{};",
+                sqlformat::format(
+                    &sql,
+                    &Default::default(),
+                    &sqlformat::FormatOptions {
+                        uppercase: Some(true),
+                        ..Default::default()
+                    },
+                )
+            ))
+        })
+        .collect::<Result<Vec<_>>>()?
+        .join("\n\n");
+
+    println!("{schema}");
     Ok(())
 }
