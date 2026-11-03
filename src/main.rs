@@ -34,7 +34,10 @@ fn main() -> Result<()> {
     runner.run(&mut sqlite).context("running migrations")?;
     let mut stmt = sqlite
         .prepare(
-            "SELECT sql FROM sqlite_schema WHERE sql IS NOT NULL AND name NOT LIKE 'refinery_%'",
+            r"SELECT sql FROM sqlite_schema
+            WHERE sql IS NOT NULL
+            AND name NOT LIKE 'refinery\_%' ESCAPE '\'
+            AND name NOT LIKE 'sqlite\_%' ESCAPE '\'",
         )
         .context("preparing schema query")?;
     let schema = stmt
